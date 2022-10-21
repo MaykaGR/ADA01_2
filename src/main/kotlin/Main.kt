@@ -28,20 +28,36 @@ fun main() {
                         val ficheroEscritura = File("personajes${System.getProperty("file.separator")}${nombre}.txt")
                         val pw = PrintWriter(ficheroEscritura, Charsets.UTF_8)
                         var texto = ""
-                        var personaje = nodoPadre.getElementsByTagName(nombre)
-                        texto = personaje.item(0).textContent
-                        /*for(j in 0..etiquetas.length-1){
+                        var over = false
+                        var x = 0
+                        var etiquetas = nodoPadre.childNodes
+                        while(x<nodoPadre.childNodes.length&&over==false){
+                            var nodos = etiquetas.item(x).childNodes
+                            if(nodos.length>1){
+                                for(n in 0..nodos.length-1){
+                                    val et = nodos.item(i) as Element
+                                    if(et.tagName == nombre){
+                                        etiquetas = nodos.item(i).childNodes
+                                        over = true
+                                    }
+                                }
+                            }
+                            x += 1
+                        }
+                        //var personaje = nodoPadre.getElementsByTagName(nombre)
+                        //texto = personaje.item(0).textContent
+                        for(j in 0..etiquetas.length-1){
                             println(etiquetas.item(j))
                             val campo = etiquetas.item(j) as Element
-                            //println("${campo.tagName}${campo.textContent}")
+                            println("${campo.tagName}${campo.textContent}")
                             //if(campo.tagName=="name"){println(campo.textContent)}
                             when(campo.tagName){
                                 "name" -> texto+="name: ${campo.textContent}"
                                 "title" -> texto+="title: ${campo.textContent}"
                                 "blurb" -> texto+="blurb: ${campo.textContent}"
                                 "tags" -> texto+="tags: ${campo.textContent}"
-                            }*/
-                        //}
+                            }
+                        }
                         pw.write(texto)
                         pw.close()
                         encontrado = true
