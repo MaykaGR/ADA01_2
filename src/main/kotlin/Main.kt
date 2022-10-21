@@ -5,30 +5,6 @@ import org.w3c.dom.NodeList
 import java.io.File
 import java.io.PrintWriter
 import javax.xml.parsers.DocumentBuilderFactory
-fun nodes(nodeList: NodeList, nombre: String):NodeList{
-    var nuevaList = nodeList
-    if(nodeList.length>1){
-        for(i in 0..nodeList.length-1){
-            val campo = nuevaList.item(i) as Element
-            if(campo.tagName==nombre){
-                nuevaList = nodeList.item(i).childNodes
-            }
-        }
-    }
-    else{
-        val elemento = nodeList.item(0)
-        val e = elemento as Element
-        if(e.tagName == nombre){
-            nuevaList = nodeList
-        }
-        else{
-            nuevaList = nodeList.item(0).childNodes
-        }
-    }
-    //println(nuevaList.item(5).childNodes.item(0).textContent)
-    return nuevaList
-}
-
 
 fun main() {
     var exit = false
@@ -49,45 +25,29 @@ fun main() {
                 while(i<nombres.length&&encontrado == false){
                     if(nombres.item(i).textContent==nombre){
                         println("Personaje encontrado. Generando informe...")
-                        //val nodo = nombres.item(i).getRootNode()
                         val ficheroEscritura = File("personajes${System.getProperty("file.separator")}${nombre}.txt")
                         val pw = PrintWriter(ficheroEscritura, Charsets.UTF_8)
                         var texto = ""
-                        /*var over = false
-                        var x = 0
-                        var etiquetas = nodoPadre.childNodes
-                        while(x<nodoPadre.childNodes.length&&over==false){
-                            var nodos = etiquetas.item(x).childNodes
-                            if(nodos.length>1){
-                                for(n in 0..nodos.length-1){
-                                    val et = nodos.item(i) as Element
-                                    if(et.tagName == nombre){
-                                        etiquetas = nodos.item(i).childNodes
-                                        over = true
-                                    }
+                        val personajes = nodoPadre.getElementsByTagName(nombre)
+
+                        for(j in 0..personajes.length-1){
+                            val personaje = personajes.item(j)
+                            val campos = personaje.childNodes
+                            var listaTags = mutableListOf<String>()
+                            for(x in 0..campos.length-1) {
+                                val campo = campos.item(x)
+                                when(campo.nodeName){
+                                    "name" -> texto+="name: ${campo.textContent}\n"
+                                    "title" -> texto+="title: ${campo.textContent}\n"
+                                    "blurb" -> texto+="blurb: ${campo.textContent}\n"
+                                    "tags" -> listaTags.add(campo.textContent)
                                 }
                             }
-                            x += 1
-                        }*/
-                        //val personaje = nodoPadre.getElementsByTagName(nombre)
-                        //val etiquetas = personaje.item(0).childNodes
-                        //texto = personaje.item(0).textContent
-                        val etiquetas = nodes(nodos,nombre)
-                        for(j in 0..etiquetas.length-1){
-                            //println(etiquetas.item(j))
-                            val campo = etiquetas.item(j).nodeName
-                            //println("${etiquetas.item(j).nodeName}${etiquetas.item(j).childNodes.item(0).textContent}")
-                            //if(campo.tagName=="name"){println(campo.textContent)}
-                            when(campo){
-                                "name" -> texto+="name: ${etiquetas.item(j).childNodes.item(0).textContent}"
-                                "title" -> texto+="title: ${etiquetas.item(j).childNodes.item(0).textContent}"
-                                "blurb" -> texto+="blurb: ${etiquetas.item(j).childNodes.item(0).textContent}"
-                                "tags" -> texto+="tags: ${etiquetas.item(j).childNodes.item(0).textContent}"
-                            }
-                            println(texto)
+                            texto+="tags: ${listaTags[0]}"
                         }
                         pw.write(texto)
                         pw.close()
+                        //println(texto)
                         encontrado = true
                     }
                     i+=1
