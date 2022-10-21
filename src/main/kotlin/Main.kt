@@ -5,6 +5,29 @@ import org.w3c.dom.NodeList
 import java.io.File
 import java.io.PrintWriter
 import javax.xml.parsers.DocumentBuilderFactory
+fun nodes(nodeList: NodeList, nombre: String):NodeList{
+    var nuevaList = nodeList
+    if(nodeList.length>1){
+        for(i in 0..nodeList.length-1){
+            val campo = nuevaList.item(i) as Element
+            if(campo.tagName==nombre){
+                nuevaList = nodeList.item(i).childNodes
+            }
+        }
+    }
+    else{
+        val elemento = nodeList.item(0)
+        val e = elemento as Element
+        if(e.tagName == nombre){
+            nuevaList = nodeList
+        }
+        else{
+            nuevaList = nodeList.item(0).childNodes
+        }
+    }
+    //println(nuevaList.item(5).childNodes.item(0).textContent)
+    return nuevaList
+}
 
 
 fun main() {
@@ -21,10 +44,12 @@ fun main() {
                 while(encontrado==false){
                 println("Introduce el nombre del personaje: ")
                 val nombre = readln()
+                    var nodos = nodoPadre.childNodes
                 var i = 0
                 while(i<nombres.length&&encontrado == false){
                     if(nombres.item(i).textContent==nombre){
                         println("Personaje encontrado. Generando informe...")
+                        //val nodo = nombres.item(i).getRootNode()
                         val ficheroEscritura = File("personajes${System.getProperty("file.separator")}${nombre}.txt")
                         val pw = PrintWriter(ficheroEscritura, Charsets.UTF_8)
                         var texto = ""
@@ -44,20 +69,22 @@ fun main() {
                             }
                             x += 1
                         }*/
-                        val personaje = nodoPadre.getElementsByTagName(nombre)
-                        val etiquetas = personaje.item(0).childNodes
+                        //val personaje = nodoPadre.getElementsByTagName(nombre)
+                        //val etiquetas = personaje.item(0).childNodes
                         //texto = personaje.item(0).textContent
+                        val etiquetas = nodes(nodos,nombre)
                         for(j in 0..etiquetas.length-1){
                             //println(etiquetas.item(j))
-                            val campo = etiquetas.item(j) as Element
-                            println("${campo.tagName}${campo.textContent}")
+                            val campo = etiquetas.item(j).nodeName
+                            //println("${etiquetas.item(j).nodeName}${etiquetas.item(j).childNodes.item(0).textContent}")
                             //if(campo.tagName=="name"){println(campo.textContent)}
-                            when(campo.tagName){
-                                "name" -> texto+="name: ${campo.textContent}"
-                                "title" -> texto+="title: ${campo.textContent}"
-                                "blurb" -> texto+="blurb: ${campo.textContent}"
-                                "tags" -> texto+="tags: ${campo.textContent}"
+                            when(campo){
+                                "name" -> texto+="name: ${etiquetas.item(j).childNodes.item(0).textContent}"
+                                "title" -> texto+="title: ${etiquetas.item(j).childNodes.item(0).textContent}"
+                                "blurb" -> texto+="blurb: ${etiquetas.item(j).childNodes.item(0).textContent}"
+                                "tags" -> texto+="tags: ${etiquetas.item(j).childNodes.item(0).textContent}"
                             }
+                            println(texto)
                         }
                         pw.write(texto)
                         pw.close()
