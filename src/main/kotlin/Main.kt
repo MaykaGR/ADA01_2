@@ -19,8 +19,9 @@ fun main() {
                 var encontrado = false
                 while(encontrado==false){
                 println("Introduce el nombre del personaje: ")
-                val nombre = readln()
-                    var nodos = nodoPadre.childNodes
+                    var nombre = readln()
+                    var letra = nombre.toCharArray()[0].toUpperCase()
+                    nombre = nombre.toLowerCase().replaceFirstChar { letra }
                 var i = 0
                 while(i<nombres.length&&encontrado == false){
                     if(nombres.item(i).textContent==nombre){
@@ -31,19 +32,25 @@ fun main() {
                         val personajes = nodoPadre.getElementsByTagName(nombre)
 
                         for(j in 0..personajes.length-1){
-                            val personaje = personajes.item(j)
-                            val campos = personaje.childNodes
-                            var listaTags = mutableListOf<String>()
-                            for(x in 0..campos.length-1) {
-                                val campo = campos.item(x)
-                                when(campo.nodeName){
-                                    "name" -> texto+="name: ${campo.textContent}\n"
-                                    "title" -> texto+="title: ${campo.textContent}\n"
-                                    "blurb" -> texto+="blurb: ${campo.textContent}\n"
-                                    "tags" -> listaTags.add(campo.textContent)
+                            val nodePersonaje = personajes.item(j)
+                            if(nodePersonaje.nodeType == Node.ELEMENT_NODE){
+                                val personaje: Element = nodePersonaje as Element
+
+                                val tag = personaje.getElementsByTagName("tags").item(0).textContent
+
+                                val campos = personaje.childNodes
+
+                                for(x in 0..campos.length-1) {
+                                    val campo = campos.item(x)
+                                    when(campo.nodeName){
+                                        "name" -> texto+="name: ${campo.textContent}\n"
+                                        "title" -> texto+="title: ${campo.textContent}\n"
+                                        "blurb" -> texto+="blurb: ${campo.textContent}\n"
+                                    }
                                 }
+                                texto+="tags: ${tag}"
                             }
-                            texto+="tags: ${listaTags[0]}"
+
                         }
                         pw.write(texto)
                         pw.close()
