@@ -25,36 +25,23 @@ fun main() {
                 while(i<nombres.length&&encontrado == false){
                     if(nombres.item(i).textContent==nombre){
                         println("Personaje encontrado. Generando informe...")
-                        var personajes= nodoPadre.childNodes
                         val ficheroEscritura = File("personajes${System.getProperty("file.separator")}${nombre}.txt")
                         val pw = PrintWriter(ficheroEscritura, Charsets.UTF_8)
                         var texto = ""
-                        var x = 0
-                        var over = false
-                        while(x<personajes.length&&over==false){
-                            var personaje = personajes.item(x) as Element
-                            if(personaje.nodeType==Node.ELEMENT_NODE&&personaje.tagName != nombre) {
-                                personajes = personaje.childNodes
-                            }
-                            else if(personaje.nodeType==Node.ELEMENT_NODE&&personaje.tagName==nombre){
-                                val etiquetas = personaje.childNodes
-                                for(j in 0..etiquetas.length-1){
-                                    //println(etiquetas.item(j))
-                                    val campo: Element = etiquetas.item(j) as Element
-                                    //println("${campo.tagName}${campo.textContent}")
-                                    //if(campo.tagName=="name"){println(campo.textContent)}
-                                    when(campo.tagName){
-                                        "name" -> texto+="name: ${campo.textContent}"
-                                        "title" -> texto+="title: ${campo.textContent}"
-                                        "blurb" -> texto+="blurb: ${campo.textContent}"
-                                        "tags" -> texto+="tags: ${campo.textContent}"
-                                    }
-                                }
-                            over = true
-                            }
-                            //println(personajes.length)
-                            x+=1
-                        }
+                        var personaje = nodoPadre.getElementsByTagName(nombre)
+                        texto = personaje.item(0).textContent
+                        /*for(j in 0..etiquetas.length-1){
+                            println(etiquetas.item(j))
+                            val campo = etiquetas.item(j) as Element
+                            //println("${campo.tagName}${campo.textContent}")
+                            //if(campo.tagName=="name"){println(campo.textContent)}
+                            when(campo.tagName){
+                                "name" -> texto+="name: ${campo.textContent}"
+                                "title" -> texto+="title: ${campo.textContent}"
+                                "blurb" -> texto+="blurb: ${campo.textContent}"
+                                "tags" -> texto+="tags: ${campo.textContent}"
+                            }*/
+                        //}
                         pw.write(texto)
                         pw.close()
                         encontrado = true
