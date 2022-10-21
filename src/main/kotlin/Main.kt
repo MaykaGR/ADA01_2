@@ -28,7 +28,7 @@ fun main() {
                         val ficheroEscritura = File("personajes${System.getProperty("file.separator")}${nombre}.txt")
                         val pw = PrintWriter(ficheroEscritura, Charsets.UTF_8)
                         var texto = ""
-                        var over = false
+                        /*var over = false
                         var x = 0
                         var etiquetas = nodoPadre.childNodes
                         while(x<nodoPadre.childNodes.length&&over==false){
@@ -43,11 +43,12 @@ fun main() {
                                 }
                             }
                             x += 1
-                        }
-                        //var personaje = nodoPadre.getElementsByTagName(nombre)
+                        }*/
+                        val personaje = nodoPadre.getElementsByTagName(nombre)
+                        val etiquetas = personaje.item(0).childNodes
                         //texto = personaje.item(0).textContent
                         for(j in 0..etiquetas.length-1){
-                            println(etiquetas.item(j))
+                            //println(etiquetas.item(j))
                             val campo = etiquetas.item(j) as Element
                             println("${campo.tagName}${campo.textContent}")
                             //if(campo.tagName=="name"){println(campo.textContent)}
